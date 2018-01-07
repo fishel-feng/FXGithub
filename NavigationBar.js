@@ -4,7 +4,6 @@ import {
   Platform,
   StyleSheet,
   Text,
-  Image,
   StatusBar,
   View
 } from 'react-native';
