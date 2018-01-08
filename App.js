@@ -10,10 +10,12 @@ import {
   StyleSheet,
   Text,
   Image,
-  View
+  View,
 } from 'react-native';
 import {Navigator} from 'react-native-deprecated-custom-components';
 import Boy from './Boy';
+import ListViewTest from './ListViewTest';
+import FetchTest from './FetchTest';
 import TabNavigator from 'react-native-tab-navigator';
 
 const instructions = Platform.select({
@@ -77,12 +79,14 @@ export default class App extends Component<{}> {
             <View style={styles.page2}></View>
           </TabNavigator.Item>
         </TabNavigator>*/}
-        <Navigator initialRoute={{
-          component: Boy
-        }} renderScene={(route, navigator) => {
-          let Component = route.component;
-          return <Component navigator={navigator} {...route.params}/>
-        }}></Navigator>
+        {/*<Navigator initialRoute={{*/}
+        {/*component: Boy*/}
+        {/*}} renderScene={(route, navigator) => {*/}
+        {/*let Component = route.component;*/}
+        {/*return <Component navigator={navigator} {...route.params}/>*/}
+        {/*}}/>*/}
+        {/*<ListViewTest/>*/}
+        <FetchTest/>
       </View>
     );
   }
