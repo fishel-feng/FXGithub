@@ -8,6 +8,8 @@ import {
 import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
 import PopularPage from './PopularPage';
+import AsyncStorageTest from '../../AsyncStorageTest';
+import MyPage from './my/MyPage';
 
 export default class HomePage extends Component {
 
@@ -40,7 +42,7 @@ export default class HomePage extends Component {
             renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'yellow'}]}
                                              source={require('../../res/images/ic_trending.png')}/>}
             onPress={() => this.setState({selectedTab: 'tab_trending'})}>
-            <View style={styles.page2}></View>
+            <AsyncStorageTest/>
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'tab_favorite'}
@@ -60,7 +62,7 @@ export default class HomePage extends Component {
             renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'yellow'}]}
                                              source={require('../../res/images/ic_trending.png')}/>}
             onPress={() => this.setState({selectedTab: 'tab_my'})}>
-            <View style={styles.page2}></View>
+            <MyPage {...this.props}/>
           </TabNavigator.Item>
         </TabNavigator>
       </View>

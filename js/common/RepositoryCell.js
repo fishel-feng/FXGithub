@@ -19,8 +19,7 @@ export default class RepositoryCell extends Component {
             <Text>Author:</Text>
             <Image
               style={{height: 22, width: 22}}
-              source={{uri: this.props.data.owner.avatar_url}}
-            />
+              source={{uri: this.props.data.owner.avatar_url}}/>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text>Stars:</Text>
