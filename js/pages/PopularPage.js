@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  ListView
+  ListView,
+  RefreshControl
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import {Navigator} from 'react-native-deprecated-custom-components';
@@ -43,12 +44,21 @@ export default class PopularPage extends Component {
       <View style={styles.container}>
         <NavigationBar
           title={'最热'}
+          statusBar={{
+            backgroundColor: '#2196F3'
+          }}
         />
-        <ScrollableTabView renderTabBar={() => <ScrollableTabBar/>}>
-          <PopularTab tabLabel="Java">Java</PopularTab>
-          <PopularTab tabLabel="IOS">IOS</PopularTab>
-          <PopularTab tabLabel="Android">Android</PopularTab>
-          <PopularTab tabLabel="JS">JS</PopularTab>
+        <ScrollableTabView
+          tabBarBackgroundColor='#2196F3'
+          tabBarInactiveTextColor='mintcream'
+          tabBarActiveTextColor='white'
+          tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
+          // renderTabBar={() => <ScrollableTabBar/>}
+        >
+          <PopularTab tabLabel='Java'>Java</PopularTab>
+          <PopularTab tabLabel='IOS'>IOS</PopularTab>
+          <PopularTab tabLabel='Android'>Android</PopularTab>
+          <PopularTab tabLabel='JS'>JS</PopularTab>
         </ScrollableTabView>
       </View>
     );
@@ -61,7 +71,8 @@ class PopularTab extends Component {
     this.dataRepository = new DataRepository();
     this.state = {
       result: '',
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      isLoading: false
     };
   }
 
@@ -70,10 +81,14 @@ class PopularTab extends Component {
   }
 
   loadData() {
+    this.setState({
+      isLoading: true
+    });
     let url = URL + this.props.tabLabel + QUERY_STR;
     this.dataRepository.fetchNetRepository(url).then(result => {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(result.items)
+        dataSource: this.state.dataSource.cloneWithRows(result.items),
+        isLoading: false
       });
     }).catch(error => {
       this.setState({
@@ -87,10 +102,18 @@ class PopularTab extends Component {
   }
 
   render() {
-    return <View>
+    return <View style={{flex: 1}}>
       <ListView
         dataSource={this.state.dataSource}
         renderRow={data => this.renderRow(data)}
+        refreshControl={<RefreshControl
+          refreshing={this.state.isLoading}
+          onRefresh={() => this.loadData()}
+          color={['#2179F3']}
+          tintColor={'#2179F3'}
+          title={'loading...'}
+          titleColor={'#2179F3'}
+        />}
       />
     </View>
   }
