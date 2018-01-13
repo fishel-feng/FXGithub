@@ -6,24 +6,33 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import HTMLView from "react-native-htmlview";
 
-export default class RepositoryCell extends Component {
+export default class TrendingCell extends Component {
 
   render() {
+    let description = `<p>${this.props.data.description}</p>`;
     return <TouchableOpacity onPress={this.props.onSelect} style={styles.container}>
       <View style={styles.cell_container}>
-        <Text style={styles.title}>{this.props.data.full_name}</Text>
-        <Text style={styles.description}>{this.props.data.description}</Text>
+        <Text style={styles.title}>{this.props.data.fullName}</Text>
+        <HTMLView
+          value={description}
+          onLinkPress={(url) => {
+          }}
+          stylesheet={{
+            p: styles.description,
+            a: styles.description
+          }}/>
+        <Text style={styles.description}>{this.props.data.meta}</Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text>Author:</Text>
-            <Image
-              style={{height: 22, width: 22}}
-              source={{uri: this.props.data.owner.avatar_url}}/>
-          </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text>Stars:</Text>
-            <Text>{this.props.data.stargazers_count}</Text>
+            <Text style={styles.description}>Build by:</Text>
+            {this.props.data.contributors.map((result, i, arr) => {
+              return <Image
+                key={i}
+                style={{height: 22, width: 22}}
+                source={{uri: arr[i]}}/>
+            })}
           </View>
           <Image style={{width: 22, height: 22}} source={require('../../res/images/ic_star.png')}/>
         </View>
@@ -45,7 +54,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     marginBottom: 2,
-    color: '#757575'
+    color: '#757575',
   },
   cell_container: {
     backgroundColor: 'white',

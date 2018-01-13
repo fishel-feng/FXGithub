@@ -10,20 +10,19 @@ import {
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import {Navigator} from 'react-native-deprecated-custom-components';
-import RepositoryCell from '../common/RepositoryCell';
+import TrendingCell from '../common/TrendingCell';
 import NavigationBar from '../common/NavigationBar';
 import HomePage from './HomePage';
 import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
 import LanguageDao, {FLAG_LANGUAGE} from '../expand/dao/LanguageDao';
 import RepositoryDetail from "./RepositoryDetail";
 
-const URL = 'https://api.github.com/search/repositories?q=';
-const QUERY_STR = '&sort=stars';
+const API_URL = 'https://github.com/trending/';
 
-export default class PopularPage extends Component {
+export default class TrendingPage extends Component {
   constructor(props) {
     super(props);
-    this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
+    this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
     this.state = {
       result: '',
       languages: []
@@ -54,13 +53,13 @@ export default class PopularPage extends Component {
         renderTabBar={() => <ScrollableTabBar/>}>
         {this.state.languages.map((result, i, arr) => {
           let lan = arr[i];
-          return lan.checked ? <PopularTab key={i} tabLabel={lan.name} {...this.props}/> : null;
+          return lan.checked ? <TrendingTab key={i} tabLabel={lan.name} {...this.props}/> : null;
         })}
       </ScrollableTabView> : null;
     return (
       <View style={styles.container}>
         <NavigationBar
-          title={'最热'}
+          title={'趋势'}
           statusBar={{backgroundColor: '#2196F3'}}/>
         {content}
       </View>
@@ -68,10 +67,10 @@ export default class PopularPage extends Component {
   }
 }
 
-class PopularTab extends Component {
+class TrendingTab extends Component {
   constructor(props) {
     super(props);
-    this.dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
+    this.dataRepository = new DataRepository(FLAG_STORAGE.flag_trending);
     this.state = {
       result: '',
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
@@ -87,7 +86,7 @@ class PopularTab extends Component {
     this.setState({
       isLoading: true
     });
-    let url = URL + this.props.tabLabel + QUERY_STR;
+    let url = this.genFetchUrl('?since=daily',this.props.tabLabel);
     this.dataRepository.fetchRepository(url).then(result => {
       let items = result && result.items ? result.items : result ? result : [];
       this.setState({
@@ -125,8 +124,12 @@ class PopularTab extends Component {
     });
   }
 
+  genFetchUrl(timeSpan, category) {
+    return API_URL + category + timeSpan.searchText;
+  }
+
   renderRow(data) {
-    return <RepositoryCell onSelect={() => this.onSelect(data)} key={data.id} data={data}/>
+    return <TrendingCell onSelect={() => this.onSelect(data)} key={data.id} data={data}/>
   }
 
   render() {

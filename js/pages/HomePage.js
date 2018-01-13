@@ -11,6 +11,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import PopularPage from './PopularPage';
 import MyPage from './my/MyPage';
 import Toast, {DURATION} from "react-native-easy-toast";
+import TrendingPage from "./TrendingPage";
 
 export default class HomePage extends Component {
 
@@ -31,50 +32,26 @@ export default class HomePage extends Component {
     this.listener && this.listener.remove();
   }
 
+  _renderTab(Component, selectTab, title, renderIcon) {
+    return <TabNavigator.Item
+      selected={this.state.selectedTab === selectTab}
+      selectedTitleStyle={{color: '#2196F3'}}
+      title={title}
+      renderIcon={() => <Image style={styles.image} source={renderIcon}/>}
+      renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196F3'}]} source={renderIcon}/>}
+      onPress={() => this.setState({selectedTab: selectTab})}>
+      <Component {...this.props}/>
+    </TabNavigator.Item>;
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <TabNavigator>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'tab_popular'}
-            selectedTitleStyle={{color: '#2196F3'}}
-            title="最热"
-            renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_popular.png')}/>}
-            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196F3'}]}
-                                             source={require('../../res/images/ic_popular.png')}/>}
-            onPress={() => this.setState({selectedTab: 'tab_popular'})}>
-            <PopularPage {...this.props}/>
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'tab_trending'}
-            selectedTitleStyle={{color: 'yellow'}}
-            title="趋势"
-            renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_trending.png')}/>}
-            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'yellow'}]}
-                                             source={require('../../res/images/ic_trending.png')}/>}
-            onPress={() => this.setState({selectedTab: 'tab_trending'})}>
-
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'tab_favorite'}
-            selectedTitleStyle={{color: 'red'}}
-            title="收藏"
-            renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_favorite.png')}/>}
-            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'red'}]}
-                                             source={require('../../res/images/ic_popular.png')}/>}
-            onPress={() => this.setState({selectedTab: 'tab_favorite'})}>
-            <View style={styles.page1}></View>
-          </TabNavigator.Item>
-          <TabNavigator.Item
-            selected={this.state.selectedTab === 'tab_my'}
-            selectedTitleStyle={{color: 'yellow'}}
-            title="我的"
-            renderIcon={() => <Image style={styles.image} source={require('../../res/images/ic_my.png')}/>}
-            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'yellow'}]}
-                                             source={require('../../res/images/ic_trending.png')}/>}
-            onPress={() => this.setState({selectedTab: 'tab_my'})}>
-            <MyPage {...this.props}/>
-          </TabNavigator.Item>
+          {this._renderTab(PopularPage, 'tab_popular', '最热', require('../../res/images/ic_popular.png'))}
+          {this._renderTab(TrendingPage, 'tab_trending', '趋势', require('../../res/images/ic_trending.png'))}
+          {this._renderTab(PopularPage, 'tab_favorite', '收藏', require('../../res/images/ic_favorite.png'))}
+          {this._renderTab(MyPage, 'tab_my', '我的', require('../../res/images/ic_my.png'))}
         </TabNavigator>
         <Toast ref={toast => this.toast = toast}/>
       </View>
