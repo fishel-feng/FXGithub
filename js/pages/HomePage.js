@@ -9,7 +9,6 @@ import {
 import {Navigator} from 'react-native-deprecated-custom-components';
 import TabNavigator from 'react-native-tab-navigator';
 import PopularPage from './PopularPage';
-import AsyncStorageTest from '../../AsyncStorageTest';
 import MyPage from './my/MyPage';
 import Toast, {DURATION} from "react-native-easy-toast";
 
@@ -44,7 +43,7 @@ export default class HomePage extends Component {
             renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196F3'}]}
                                              source={require('../../res/images/ic_popular.png')}/>}
             onPress={() => this.setState({selectedTab: 'tab_popular'})}>
-            <PopularPage/>
+            <PopularPage {...this.props}/>
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'tab_trending'}
@@ -54,7 +53,7 @@ export default class HomePage extends Component {
             renderSelectedIcon={() => <Image style={[styles.image, {tintColor: 'yellow'}]}
                                              source={require('../../res/images/ic_trending.png')}/>}
             onPress={() => this.setState({selectedTab: 'tab_trending'})}>
-            <AsyncStorageTest/>
+
           </TabNavigator.Item>
           <TabNavigator.Item
             selected={this.state.selectedTab === 'tab_favorite'}
